@@ -70,11 +70,21 @@ export default {
       }
     },
     async registerPeriodicNewsCheck() {
+      const status = await navigator.permissions.query({
+        name: 'periodic-background-sync',
+      });
+      if (status.state === 'granted') {
+        console.log('Periodic background sync can be used.')
+      } else {
+        console.log('Periodic background sync cannot be used.')
+      }
       const registration = await navigator.serviceWorker.ready;
       try {
+        console.log('await registration')
         await registration.periodicSync.register('get-test-info', {
-          minInterval: 60 * 1000
+          minInterval: 60 * 60 * 1000
         });
+        console.log('registration successful')
       } catch (error) {
         console.error('Periodic Sync could not be registered!', error);
       }
