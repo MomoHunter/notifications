@@ -25,10 +25,10 @@ export default {
         if (event.data) {
           switch (event.data.type) {
             case 'newUpdate':
-              text = 'hier neue Update'
+              this.text = 'hier neue Update'
               break
             case 'updateFinished':
-              text = 'update finish'
+              this.text = 'update finish'
               break
             default:
               console.log(event.data.content)
@@ -73,10 +73,10 @@ export default {
       const registration = await navigator.serviceWorker.ready;
       try {
         await registration.periodicSync.register('get-test-info', {
-          minInterval: 60 * 1000,
+          minInterval: 60 * 1000
         });
-      } catch {
-        console.log('Periodic Sync could not be registered!');
+      } catch (error) {
+        console.error('Periodic Sync could not be registered!', error);
       }
     }
   }

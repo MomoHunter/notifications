@@ -23,6 +23,7 @@ self.addEventListener('message', (event) => {
 });
 
 self.addEventListener('periodicsync', event => {
+  console.log(event.tag)
   if (event.tag === 'get-test-info') {
     sendNotification()
   }
