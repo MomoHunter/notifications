@@ -22,6 +22,12 @@ self.addEventListener('message', (event) => {
   }
 });
 
+self.addEventListener('periodicsync', event => {
+  if (event.tag === 'get-test-info') {
+    sendNotification()
+  }
+})
+
 function renewCache () {
   return new Promise((resolve, reject) => {
     let openRequest = indexedDB.open('updatedb');
@@ -142,4 +148,11 @@ function sendMessage (data) {
   }).catch((error) => {
     console.error(error);
   });
+}
+
+function sendNotification () {
+  self.registration.showNotification('Interval Sample', {
+    body: 'Da hast du Pech!!',
+    tag: 'sample'
+  })
 }
