@@ -4,12 +4,45 @@
     <button @click="initNotif()">
       Ask for notifications
     </button>
+    <div>{{ text }}</div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'App',
+  data () {
+    return {
+      text: ''
+    }
+  },
+  created () {
+    if (navigator.serviceWorker) {
+      navigator.serviceWorker.onmessage = (event) => {
+        if (event.data) {
+          switch (event.data.type) {
+            case 'newUpdate':
+              text = 'hier neue Update'
+              break
+            case 'updateFinished':
+              if (this.$store.state.missedUpdates && this.$store.state.allowUpdates) {
+                this.$store.commit('resetMissedUpdates')
+                this.$store.commit('updateSuccessful')
+                window.localStorage.setItem('globalDict', JSON.stringify(this.$store.getters.getSaveData))
+                location.reload()
+              } else {
+                this.$store.commit('updateSuccessful')
+                window.localStorage.setItem('globalDict', JSON.stringify(this.$store.getters.getSaveData))
+                this.updateFinished()
+              }
+              break
+            default:
+              console.log(event.data.content)
+          }
+        }
+      }
+    }
+  },
   methods: {
     initNotif () {
       if (!("Notification" in window)) {
@@ -19,7 +52,13 @@ export default {
       // Let's check whether notification permissions have already been granted
       else if (Notification.permission === "granted") {
         // If it's okay let's create a notification
-        var notification = new Notification("Hi there!")
+        // var notification = new Notification("Hi there!")
+        navigator.serviceWorker.ready.then(function(registration) {
+          registration.showNotification('Vibration Sample', {
+            body: 'Buzz! Buzz!',
+            tag: 'sample'
+          })
+        })
       }
 
       // Otherwise, we need to ask the user for permission
@@ -27,7 +66,11 @@ export default {
         Notification.requestPermission().then(function (permission) {
           // If the user accepts, let's create a notification
           if (permission === "granted") {
-            var notification = new Notification("Hi there!")
+            // var notification = new Notification("Hi there!")
+            navigator.serviceWorker.controller.postMessage({
+              type: 'message',
+              content: 'Haha, it works'
+            })
           }
         });
       }
