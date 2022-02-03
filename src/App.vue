@@ -4,6 +4,9 @@
     <button @click="initNotif()">
       Ask for notifications
     </button>
+    <button @click="registerPeriodicNewsCheck()">
+      Add periodic sync notifications
+    </button>
     <div>{{ text }}</div>
   </div>
 </template>
@@ -25,16 +28,7 @@ export default {
               text = 'hier neue Update'
               break
             case 'updateFinished':
-              if (this.$store.state.missedUpdates && this.$store.state.allowUpdates) {
-                this.$store.commit('resetMissedUpdates')
-                this.$store.commit('updateSuccessful')
-                window.localStorage.setItem('globalDict', JSON.stringify(this.$store.getters.getSaveData))
-                location.reload()
-              } else {
-                this.$store.commit('updateSuccessful')
-                window.localStorage.setItem('globalDict', JSON.stringify(this.$store.getters.getSaveData))
-                this.updateFinished()
-              }
+              text = 'update finish'
               break
             default:
               console.log(event.data.content)
