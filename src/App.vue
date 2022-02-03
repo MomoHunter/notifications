@@ -1,15 +1,37 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="flex">
+    <button @click="initNotif()">
+      Ask for notifications
+    </button>
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+  methods: {
+    initNotif () {
+      if (!("Notification" in window)) {
+        alert("This browser does not support desktop notification")
+      }
+
+      // Let's check whether notification permissions have already been granted
+      else if (Notification.permission === "granted") {
+        // If it's okay let's create a notification
+        var notification = new Notification("Hi there!")
+      }
+
+      // Otherwise, we need to ask the user for permission
+      else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then(function (permission) {
+          // If the user accepts, let's create a notification
+          if (permission === "granted") {
+            var notification = new Notification("Hi there!")
+          }
+        });
+      }
+    }
   }
 }
 </script>
@@ -22,5 +44,10 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.flex {
+  display: flex;
+  flex-direction: column;
 }
 </style>
