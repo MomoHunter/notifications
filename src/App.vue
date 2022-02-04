@@ -82,7 +82,7 @@ export default {
       try {
         console.log('await registration')
         await registration.periodicSync.register('get-test-info', {
-          minInterval: 60 * 60 * 1000
+          minInterval: 5 * 60 * 1000
         });
         console.log('registration successful')
       } catch (error) {
